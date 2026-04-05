@@ -15,15 +15,17 @@
     }
 
     :root {
-      --azul:       #1A2D5A;
-      --azul-claro: #243d78;
-      --laranja:    #E8621A;
+      --azul:          #1A2D5A;
+      --azul-claro:    #243d78;
+      --laranja:       #E8621A;
       --laranja-hover: #cf5516;
-      --fundo:      #f4f6f9;
-      --branco:     #ffffff;
-      --texto:      #333333;
-      --borda:      #dde1e9;
-      --sombra:     0 2px 8px rgba(0, 0, 0, 0.10);
+      --verde:         #217346;
+      --vermelho:      #C0392B;
+      --fundo:         #f4f6f9;
+      --branco:        #ffffff;
+      --texto:         #333333;
+      --borda:         #dde1e9;
+      --sombra:        0 2px 8px rgba(0, 0, 0, 0.10);
     }
 
     body {
@@ -31,6 +33,8 @@
       background-color: var(--fundo);
       color: var(--texto);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ---------------------------------------------------------------- */
@@ -44,6 +48,7 @@
       align-items: center;
       height: 60px;
       box-shadow: var(--sombra);
+      flex-shrink: 0;
     }
 
     header .logo {
@@ -64,6 +69,7 @@
       display: flex;
       overflow-x: auto;
       scrollbar-width: none;
+      flex-shrink: 0;
     }
 
     nav.abas::-webkit-scrollbar {
@@ -73,11 +79,11 @@
     nav.abas button {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.70);
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
-      padding: 14px 20px;
+      padding: 13px 16px;
       white-space: nowrap;
       transition: background-color 0.2s, color 0.2s;
       border-bottom: 3px solid transparent;
@@ -94,13 +100,20 @@
       background-color: rgba(255, 255, 255, 0.06);
     }
 
+    nav.abas button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
     /* ---------------------------------------------------------------- */
     /* Conteúdo principal                                                 */
     /* ---------------------------------------------------------------- */
     main {
-      padding: 32px 24px;
-      max-width: 1200px;
+      padding: 28px 24px;
+      max-width: 1280px;
+      width: 100%;
       margin: 0 auto;
+      flex: 1;
     }
 
     .painel {
@@ -111,9 +124,10 @@
       display: block;
     }
 
-    .painel h2 {
+    .painel > h2 {
       color: var(--azul);
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 700;
       margin-bottom: 20px;
       padding-bottom: 10px;
       border-bottom: 2px solid var(--borda);
@@ -130,41 +144,105 @@
       margin-bottom: 20px;
     }
 
+    .card-titulo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--azul);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     /* ---------------------------------------------------------------- */
-    /* Tela de upload                                                     */
+    /* Tela de upload — campos separados                                  */
     /* ---------------------------------------------------------------- */
-    .upload-area {
+    .upload-grupo {
+      margin-bottom: 20px;
+    }
+
+    .upload-grupo label.rotulo {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--azul);
+      margin-bottom: 8px;
+    }
+
+    .upload-grupo label.rotulo .badge-obrigatorio {
+      background-color: var(--vermelho);
+      color: var(--branco);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .upload-grupo label.rotulo .badge-multiplo {
+      background-color: var(--verde);
+      color: var(--branco);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .upload-zona {
       border: 2px dashed var(--borda);
       border-radius: 8px;
-      padding: 48px 24px;
+      padding: 28px 20px;
       text-align: center;
       cursor: pointer;
       transition: border-color 0.2s, background-color 0.2s;
+      position: relative;
     }
 
-    .upload-area:hover {
+    .upload-zona:hover {
       border-color: var(--laranja);
-      background-color: rgba(232, 98, 26, 0.04);
+      background-color: rgba(232, 98, 26, 0.03);
     }
 
-    .upload-area .icone {
-      font-size: 48px;
-      margin-bottom: 12px;
+    .upload-zona.tem-arquivo {
+      border-color: var(--verde);
+      background-color: rgba(33, 115, 70, 0.04);
+    }
+
+    .upload-zona .icone-upload {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .upload-zona .texto-zona {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .upload-zona .texto-zona strong {
       color: var(--azul);
     }
 
-    .upload-area p {
-      color: #666;
-      font-size: 14px;
-      margin-top: 8px;
+    .upload-zona .nomes-arquivos {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--verde);
+      font-weight: 600;
     }
 
-    .upload-area input[type="file"] {
-      display: none;
+    .upload-zona input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
     }
 
     /* ---------------------------------------------------------------- */
-    /* Botão primário                                                     */
+    /* Botões                                                             */
     /* ---------------------------------------------------------------- */
     .btn-primario {
       background-color: var(--laranja);
@@ -173,190 +251,504 @@
       color: var(--branco);
       cursor: pointer;
       font-size: 14px;
-      font-weight: 600;
-      padding: 10px 24px;
-      transition: background-color 0.2s;
+      font-weight: 700;
+      padding: 12px 32px;
+      transition: background-color 0.2s, opacity 0.2s;
+      letter-spacing: 0.3px;
     }
 
     .btn-primario:hover {
       background-color: var(--laranja-hover);
     }
 
+    .btn-primario:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* ---------------------------------------------------------------- */
-    /* Placeholder de conteúdo                                            */
+    /* Loading overlay                                                    */
+    /* ---------------------------------------------------------------- */
+    #loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(26, 45, 90, 0.75);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    #loading.visivel {
+      display: flex;
+    }
+
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border: 5px solid rgba(255, 255, 255, 0.25);
+      border-top-color: var(--laranja);
+      border-radius: 50%;
+      animation: girar 0.85s linear infinite;
+    }
+
+    @keyframes girar {
+      to { transform: rotate(360deg); }
+    }
+
+    #loading p {
+      color: var(--branco);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    #loading small {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 13px;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Mensagem de erro                                                   */
+    /* ---------------------------------------------------------------- */
+    .msg-erro {
+      background-color: #fdf2f2;
+      border: 1px solid var(--vermelho);
+      border-radius: 6px;
+      color: var(--vermelho);
+      font-size: 13px;
+      margin-top: 16px;
+      padding: 12px 16px;
+      display: none;
+    }
+
+    .msg-erro.visivel {
+      display: block;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Placeholder de painel ainda sem dados                              */
     /* ---------------------------------------------------------------- */
     .placeholder {
-      color: #999;
+      color: #aaa;
       font-size: 14px;
       text-align: center;
-      padding: 40px 0;
+      padding: 48px 0;
     }
+
+    .placeholder .icone-placeholder {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Tabela de dados genérica                                           */
+    /* ---------------------------------------------------------------- */
+    .tabela-dados {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .tabela-dados th {
+      background-color: var(--azul);
+      color: var(--branco);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .tabela-dados td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--borda);
+      vertical-align: top;
+    }
+
+    .tabela-dados tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabela-dados tr:nth-child(even) td {
+      background-color: #f9fafc;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Grid de campos chave-valor                                         */
+    /* ---------------------------------------------------------------- */
+    .grid-kv {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .campo-kv {
+      background-color: #f9fafc;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+
+    .campo-kv .chave {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .campo-kv .valor {
+      font-size: 14px;
+      color: var(--texto);
+      line-height: 1.5;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Badge de classificação ABC                                         */
+    /* ---------------------------------------------------------------- */
+    .badge-a { background-color: var(--vermelho); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .badge-b { background-color: #e67e22;          color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .badge-c { background-color: var(--verde);     color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
 
     /* ---------------------------------------------------------------- */
     /* Rodapé                                                             */
     /* ---------------------------------------------------------------- */
     footer {
       background-color: var(--azul);
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.55);
       font-size: 12px;
-      padding: 16px 24px;
+      padding: 14px 24px;
       text-align: center;
-      margin-top: 40px;
+      flex-shrink: 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
+  <!-- ================================================================ -->
+  <!-- Cabeçalho                                                         -->
+  <!-- ================================================================ -->
   <header>
     <div class="logo">RSF<span>App</span></div>
   </header>
 
-  <!-- Barra de navegação com 13 abas -->
+  <!-- ================================================================ -->
+  <!-- Barra de navegação — 13 abas do RSF + aba Upload                 -->
+  <!-- ================================================================ -->
   <nav class="abas" id="nav-abas">
-    <button class="ativa" onclick="mostrarPainel('upload', this)">Upload</button>
-    <button onclick="mostrarPainel('dashboard', this)">Dashboard</button>
-    <button onclick="mostrarPainel('clientes', this)">Clientes</button>
-    <button onclick="mostrarPainel('processos', this)">Processos</button>
-    <button onclick="mostrarPainel('documentos', this)">Documentos</button>
-    <button onclick="mostrarPainel('financeiro', this)">Financeiro</button>
-    <button onclick="mostrarPainel('agenda', this)">Agenda</button>
-    <button onclick="mostrarPainel('relatorios', this)">Relatórios</button>
-    <button onclick="mostrarPainel('analise', this)">Análise IA</button>
-    <button onclick="mostrarPainel('comunicacao', this)">Comunicação</button>
-    <button onclick="mostrarPainel('equipe', this)">Equipe</button>
-    <button onclick="mostrarPainel('configuracoes', this)">Configurações</button>
-    <button onclick="mostrarPainel('ajuda', this)">Ajuda</button>
+    <button class="ativa"  onclick="mostrarPainel('upload', this)">&#128196; Upload</button>
+    <button id="btn-resumo"      onclick="mostrarPainel('resumo', this)"      disabled>Resumo Executivo</button>
+    <button id="btn-escopo"      onclick="mostrarPainel('escopo', this)"      disabled>Projeto e Escopo</button>
+    <button id="btn-edital"      onclick="mostrarPainel('edital', this)"      disabled>Dados do Edital</button>
+    <button id="btn-servicos"    onclick="mostrarPainel('servicos', this)"    disabled>Planilha de Serviços</button>
+    <button id="btn-cron-fis"    onclick="mostrarPainel('cron-fis', this)"    disabled>Cronograma Físico</button>
+    <button id="btn-cron-fin"    onclick="mostrarPainel('cron-fin', this)"    disabled>Cronograma Financeiro</button>
+    <button id="btn-execucao"    onclick="mostrarPainel('execucao', this)"    disabled>Execução Operacional</button>
+    <button id="btn-hist-mo"     onclick="mostrarPainel('hist-mo', this)"     disabled>Histograma MO</button>
+    <button id="btn-hist-equip"  onclick="mostrarPainel('hist-equip', this)"  disabled>Histograma Equipamentos</button>
+    <button id="btn-hist-mat"    onclick="mostrarPainel('hist-mat', this)"    disabled>Histograma Materiais</button>
+    <button id="btn-fluxo"       onclick="mostrarPainel('fluxo', this)"       disabled>Fluxo de Caixa</button>
+    <button id="btn-riscos"      onclick="mostrarPainel('riscos', this)"      disabled>Matriz de Riscos</button>
+    <button id="btn-parecer"     onclick="mostrarPainel('parecer', this)"     disabled>Parecer e Simulador</button>
   </nav>
 
-  <!-- Conteúdo -->
+  <!-- ================================================================ -->
+  <!-- Loading overlay                                                   -->
+  <!-- ================================================================ -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Analisando documentos&hellip;</p>
+    <small>Isso pode levar alguns instantes</small>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- Conteúdo principal                                                -->
+  <!-- ================================================================ -->
   <main>
 
-    <!-- Aba: Upload -->
+    <!-- ============================================================== -->
+    <!-- Painel: Upload                                                  -->
+    <!-- ============================================================== -->
     <section id="painel-upload" class="painel ativo">
       <h2>Upload de Documentos</h2>
+
       <div class="card">
-        <div
-          class="upload-area"
-          id="upload-area"
-          onclick="document.getElementById('input-arquivo').click()"
-        >
-          <div class="icone">&#128196;</div>
-          <strong>Clique para selecionar um arquivo</strong>
-          <p>ou arraste e solte aqui</p>
-          <p>Formatos aceitos: PDF, DOCX, XLSX, CSV, TXT</p>
-          <input
-            type="file"
-            id="input-arquivo"
-            accept=".pdf,.docx,.xlsx,.csv,.txt"
-          />
+
+        <!-- Campo 1: Edital -->
+        <div class="upload-grupo">
+          <label class="rotulo">
+            Edital
+            <span class="badge-obrigatorio">Obrigatório</span>
+          </label>
+          <div
+            class="upload-zona"
+            id="zona-edital"
+            ondragover="dragSobre(event, this)"
+            ondragleave="dragSai(this)"
+            ondrop="drop(event, 'input-edital', this)"
+          >
+            <span class="icone-upload">&#128196;</span>
+            <div class="texto-zona">
+              <strong>Clique ou arraste o PDF do edital aqui</strong><br />
+              Apenas 1 arquivo PDF
+            </div>
+            <div class="nomes-arquivos" id="nomes-edital"></div>
+            <input
+              type="file"
+              id="input-edital"
+              accept=".pdf"
+              onchange="atualizarNomes('input-edital', 'nomes-edital', 'zona-edital')"
+            />
+          </div>
         </div>
-        <div style="margin-top: 16px; text-align: right;">
-          <button class="btn-primario">Enviar Arquivo</button>
+
+        <!-- Campo 2: Documentos Técnicos -->
+        <div class="upload-grupo">
+          <label class="rotulo">
+            Documentos Técnicos
+            <span class="badge-multiplo">Múltiplos</span>
+          </label>
+          <div
+            class="upload-zona"
+            id="zona-tecnicos"
+            ondragover="dragSobre(event, this)"
+            ondragleave="dragSai(this)"
+            ondrop="drop(event, 'input-tecnicos', this)"
+          >
+            <span class="icone-upload">&#128203;</span>
+            <div class="texto-zona">
+              <strong>Memorial, composições, cronograma físico</strong><br />
+              Múltiplos PDFs aceitos
+            </div>
+            <div class="nomes-arquivos" id="nomes-tecnicos"></div>
+            <input
+              type="file"
+              id="input-tecnicos"
+              accept=".pdf"
+              multiple
+              onchange="atualizarNomes('input-tecnicos', 'nomes-tecnicos', 'zona-tecnicos')"
+            />
+          </div>
         </div>
+
+        <!-- Campo 3: Documentos Financeiros -->
+        <div class="upload-grupo">
+          <label class="rotulo">
+            Documentos Financeiros
+            <span class="badge-multiplo">Múltiplos</span>
+          </label>
+          <div
+            class="upload-zona"
+            id="zona-financeiros"
+            ondragover="dragSobre(event, this)"
+            ondragleave="dragSai(this)"
+            ondrop="drop(event, 'input-financeiros', this)"
+          >
+            <span class="icone-upload">&#128200;</span>
+            <div class="texto-zona">
+              <strong>Planilha orçamentária, BDI, encargos sociais</strong><br />
+              Múltiplos PDFs aceitos
+            </div>
+            <div class="nomes-arquivos" id="nomes-financeiros"></div>
+            <input
+              type="file"
+              id="input-financeiros"
+              accept=".pdf"
+              multiple
+              onchange="atualizarNomes('input-financeiros', 'nomes-financeiros', 'zona-financeiros')"
+            />
+          </div>
+        </div>
+
+        <!-- Erro + Botão -->
+        <div class="msg-erro" id="msg-erro"></div>
+
+        <div style="margin-top: 24px; text-align: right;">
+          <button class="btn-primario" id="btn-analisar" onclick="enviarAnalise()">
+            Analisar Documentos
+          </button>
+        </div>
+
       </div>
     </section>
 
-    <!-- Aba: Dashboard -->
-    <section id="painel-dashboard" class="painel">
-      <h2>Dashboard</h2>
-      <div class="card">
-        <p class="placeholder">Conteúdo do dashboard em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 1: Resumo Executivo                                      -->
+    <!-- ============================================================== -->
+    <section id="painel-resumo" class="painel">
+      <h2>Resumo Executivo</h2>
+      <div class="card" id="conteudo-resumo">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128196;</span>
+          Faça o upload dos documentos para visualizar o resumo.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Clientes -->
-    <section id="painel-clientes" class="painel">
-      <h2>Clientes</h2>
-      <div class="card">
-        <p class="placeholder">Gestão de clientes em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 2: Projeto e Escopo                                      -->
+    <!-- ============================================================== -->
+    <section id="painel-escopo" class="painel">
+      <h2>Projeto e Escopo</h2>
+      <div class="card" id="conteudo-escopo">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128203;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Processos -->
-    <section id="painel-processos" class="painel">
-      <h2>Processos</h2>
-      <div class="card">
-        <p class="placeholder">Gestão de processos em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 3: Dados do Edital                                       -->
+    <!-- ============================================================== -->
+    <section id="painel-edital" class="painel">
+      <h2>Dados do Edital</h2>
+      <div class="card" id="conteudo-edital">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128196;</span>
+          Aguardando análise do edital.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Documentos -->
-    <section id="painel-documentos" class="painel">
-      <h2>Documentos</h2>
-      <div class="card">
-        <p class="placeholder">Gestão de documentos em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 4: Planilha de Serviços                                  -->
+    <!-- ============================================================== -->
+    <section id="painel-servicos" class="painel">
+      <h2>Planilha de Serviços</h2>
+      <div class="card" id="conteudo-servicos">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128202;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Financeiro -->
-    <section id="painel-financeiro" class="painel">
-      <h2>Financeiro</h2>
-      <div class="card">
-        <p class="placeholder">Módulo financeiro em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 5: Cronograma Físico                                     -->
+    <!-- ============================================================== -->
+    <section id="painel-cron-fis" class="painel">
+      <h2>Cronograma Físico</h2>
+      <div class="card" id="conteudo-cron-fis">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128197;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Agenda -->
-    <section id="painel-agenda" class="painel">
-      <h2>Agenda</h2>
-      <div class="card">
-        <p class="placeholder">Agenda em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 6: Cronograma Financeiro                                 -->
+    <!-- ============================================================== -->
+    <section id="painel-cron-fin" class="painel">
+      <h2>Cronograma Financeiro</h2>
+      <div class="card" id="conteudo-cron-fin">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128201;</span>
+          Aguardando análise dos documentos financeiros.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Relatórios -->
-    <section id="painel-relatorios" class="painel">
-      <h2>Relatórios</h2>
-      <div class="card">
-        <p class="placeholder">Módulo de relatórios em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 7: Execução Operacional                                  -->
+    <!-- ============================================================== -->
+    <section id="painel-execucao" class="painel">
+      <h2>Execução Operacional</h2>
+      <div class="card" id="conteudo-execucao">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#9881;</span>
+          Aguardando análise dos documentos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Análise IA -->
-    <section id="painel-analise" class="painel">
-      <h2>Análise com Inteligência Artificial</h2>
-      <div class="card">
-        <p class="placeholder">Módulo de análise por IA em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 8: Histograma MO                                         -->
+    <!-- ============================================================== -->
+    <section id="painel-hist-mo" class="painel">
+      <h2>Histograma de Mão de Obra</h2>
+      <div class="card" id="conteudo-hist-mo">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128104;&#8205;&#128295;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Comunicação -->
-    <section id="painel-comunicacao" class="painel">
-      <h2>Comunicação</h2>
-      <div class="card">
-        <p class="placeholder">Módulo de comunicação em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 9: Histograma Equipamentos                               -->
+    <!-- ============================================================== -->
+    <section id="painel-hist-equip" class="painel">
+      <h2>Histograma de Equipamentos</h2>
+      <div class="card" id="conteudo-hist-equip">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128663;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Equipe -->
-    <section id="painel-equipe" class="painel">
-      <h2>Equipe</h2>
-      <div class="card">
-        <p class="placeholder">Gestão de equipe em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 10: Histograma Materiais                                 -->
+    <!-- ============================================================== -->
+    <section id="painel-hist-mat" class="painel">
+      <h2>Histograma de Materiais</h2>
+      <div class="card" id="conteudo-hist-mat">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128230;</span>
+          Aguardando análise dos documentos técnicos.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Configurações -->
-    <section id="painel-configuracoes" class="painel">
-      <h2>Configurações</h2>
-      <div class="card">
-        <p class="placeholder">Configurações do sistema em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 11: Fluxo de Caixa                                       -->
+    <!-- ============================================================== -->
+    <section id="painel-fluxo" class="painel">
+      <h2>Fluxo de Caixa</h2>
+      <div class="card" id="conteudo-fluxo">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128176;</span>
+          Aguardando análise dos documentos financeiros.
+        </p>
       </div>
     </section>
 
-    <!-- Aba: Ajuda -->
-    <section id="painel-ajuda" class="painel">
-      <h2>Ajuda</h2>
-      <div class="card">
-        <p class="placeholder">Central de ajuda em desenvolvimento.</p>
+    <!-- ============================================================== -->
+    <!-- Painel 12: Matriz de Riscos                                     -->
+    <!-- ============================================================== -->
+    <section id="painel-riscos" class="painel">
+      <h2>Matriz de Riscos</h2>
+      <div class="card" id="conteudo-riscos">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#9888;</span>
+          Aguardando análise dos documentos.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- Painel 13: Parecer e Simulador                                  -->
+    <!-- ============================================================== -->
+    <section id="painel-parecer" class="painel">
+      <h2>Parecer e Simulador</h2>
+      <div class="card" id="conteudo-parecer">
+        <p class="placeholder">
+          <span class="icone-placeholder">&#128221;</span>
+          Aguardando análise completa dos documentos.
+        </p>
       </div>
     </section>
 
   </main>
 
   <footer>
-    &copy; 2026 RSF App — Todos os direitos reservados.
+    &copy; 2026 RSF App &mdash; Todos os direitos reservados.
   </footer>
 
   <script>
@@ -379,30 +771,385 @@
     }
 
     /* ---------------------------------------------------------------- */
-    /* Drag and drop na área de upload                                    */
+    /* Atualiza o nome dos arquivos selecionados na zona de upload        */
     /* ---------------------------------------------------------------- */
-    var uploadArea = document.getElementById('upload-area');
+    function atualizarNomes(inputId, nomesId, zonaId) {
+      var input  = document.getElementById(inputId);
+      var nomes  = document.getElementById(nomesId);
+      var zona   = document.getElementById(zonaId);
+      var files  = input.files;
 
-    uploadArea.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      uploadArea.style.borderColor = '#E8621A';
-      uploadArea.style.backgroundColor = 'rgba(232, 98, 26, 0.06)';
-    });
-
-    uploadArea.addEventListener('dragleave', function() {
-      uploadArea.style.borderColor = '';
-      uploadArea.style.backgroundColor = '';
-    });
-
-    uploadArea.addEventListener('drop', function(e) {
-      e.preventDefault();
-      uploadArea.style.borderColor = '';
-      uploadArea.style.backgroundColor = '';
-      var arquivos = e.dataTransfer.files;
-      if (arquivos.length > 0) {
-        document.getElementById('input-arquivo').files = arquivos;
+      if (files.length === 0) {
+        nomes.textContent = '';
+        zona.classList.remove('tem-arquivo');
+        return;
       }
-    });
+
+      var lista = Array.from(files).map(function(f) { return f.name; });
+      nomes.textContent = lista.join(' · ');
+      zona.classList.add('tem-arquivo');
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Drag and drop — handlers compartilhados                            */
+    /* ---------------------------------------------------------------- */
+    function dragSobre(event, zona) {
+      event.preventDefault();
+      zona.style.borderColor = '#E8621A';
+      zona.style.backgroundColor = 'rgba(232, 98, 26, 0.05)';
+    }
+
+    function dragSai(zona) {
+      zona.style.borderColor = '';
+      zona.style.backgroundColor = '';
+    }
+
+    function drop(event, inputId, zona) {
+      event.preventDefault();
+      dragSai(zona);
+
+      var input = document.getElementById(inputId);
+      var nomesId = inputId.replace('input-', 'nomes-');
+      var zonaId  = inputId.replace('input-', 'zona-');
+
+      var dt = new DataTransfer();
+      Array.from(event.dataTransfer.files).forEach(function(f) {
+        if (f.type === 'application/pdf') {
+          dt.items.add(f);
+        }
+      });
+
+      input.files = dt.files;
+      atualizarNomes(inputId, nomesId, zonaId);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Habilita todas as abas após análise concluída                      */
+    /* ---------------------------------------------------------------- */
+    function habilitarAbas() {
+      var botoes = document.querySelectorAll('nav.abas button[disabled]');
+      botoes.forEach(function(b) {
+        b.removeAttribute('disabled');
+      });
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Exibe / oculta loading                                             */
+    /* ---------------------------------------------------------------- */
+    function setLoading(ativo) {
+      var el = document.getElementById('loading');
+      var btn = document.getElementById('btn-analisar');
+
+      if (ativo) {
+        el.classList.add('visivel');
+        btn.disabled = true;
+      } else {
+        el.classList.remove('visivel');
+        btn.disabled = false;
+      }
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Exibe mensagem de erro                                             */
+    /* ---------------------------------------------------------------- */
+    function mostrarErro(msg) {
+      var el = document.getElementById('msg-erro');
+      el.textContent = msg;
+      el.classList.add('visivel');
+    }
+
+    function ocultarErro() {
+      var el = document.getElementById('msg-erro');
+      el.textContent = '';
+      el.classList.remove('visivel');
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Helper — cria linha de tabela                                      */
+    /* ---------------------------------------------------------------- */
+    function trTabela(celulas) {
+      var tr = '<tr>';
+      celulas.forEach(function(c) { tr += '<td>' + (c || '—') + '</td>'; });
+      tr += '</tr>';
+      return tr;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Popula os painéis com os dados retornados pela API                 */
+    /* ---------------------------------------------------------------- */
+    function popularPaineis(dados) {
+      var edital     = dados.edital     || {};
+      var tecnico    = dados.tecnico    || {};
+      var financeiro = dados.financeiro || {};
+
+      /* ---- Painel 3: Dados do Edital ---- */
+      var camposEdital = [
+        ['Objeto',                  edital.objeto],
+        ['Contratante',             edital.contratante],
+        ['Modalidade',              edital.modalidade],
+        ['Prazo de Execução',       edital.prazo],
+        ['Valor Estimado',          edital.valor_estimado],
+        ['Fonte de Recursos',       edital.fonte_recursos],
+        ['Condições de Pagamento',  edital.condicoes_pagamento],
+        ['Prazo de Recebimento',    edital.prazo_recebimento],
+        ['Penalidades',             edital.penalidades],
+        ['Habilitação Exigida',     edital.habilitacao_exigida]
+      ];
+
+      var htmlEdital = '<div class="grid-kv">';
+      camposEdital.forEach(function(item) {
+        htmlEdital +=
+          '<div class="campo-kv">' +
+            '<div class="chave">' + item[0] + '</div>' +
+            '<div class="valor">' + (item[1] || '—') + '</div>' +
+          '</div>';
+      });
+      htmlEdital += '</div>';
+      document.getElementById('conteudo-edital').innerHTML = htmlEdital;
+
+      /* ---- Painel 1: Resumo Executivo ---- */
+      var htmlResumo =
+        '<div class="grid-kv">' +
+          '<div class="campo-kv">' +
+            '<div class="chave">Objeto</div>' +
+            '<div class="valor">' + (edital.objeto || '—') + '</div>' +
+          '</div>' +
+          '<div class="campo-kv">' +
+            '<div class="chave">Contratante</div>' +
+            '<div class="valor">' + (edital.contratante || '—') + '</div>' +
+          '</div>' +
+          '<div class="campo-kv">' +
+            '<div class="chave">Valor Estimado</div>' +
+            '<div class="valor">' + (edital.valor_estimado || '—') + '</div>' +
+          '</div>' +
+          '<div class="campo-kv">' +
+            '<div class="chave">Prazo de Execução</div>' +
+            '<div class="valor">' + (edital.prazo || '—') + '</div>' +
+          '</div>' +
+          '<div class="campo-kv">' +
+            '<div class="chave">Escopo</div>' +
+            '<div class="valor">' + (tecnico.escopo_detalhado || '—') + '</div>' +
+          '</div>' +
+          '<div class="campo-kv">' +
+            '<div class="chave">BDI Total</div>' +
+            '<div class="valor">' + ((financeiro.composicao_bdi && financeiro.composicao_bdi.total_percentual) || '—') + '</div>' +
+          '</div>' +
+        '</div>';
+      document.getElementById('conteudo-resumo').innerHTML = htmlResumo;
+
+      /* ---- Painel 2: Projeto e Escopo ---- */
+      var htmlEscopo =
+        '<div class="card-titulo">Escopo Detalhado</div>' +
+        '<p style="font-size:14px;line-height:1.7;margin-bottom:20px;">' +
+          (tecnico.escopo_detalhado || '—') +
+        '</p>' +
+        '<div class="card-titulo">Encargos Sociais</div>' +
+        '<p style="font-size:14px;line-height:1.7;">' +
+          (tecnico.encargos_sociais || '—') +
+        '</p>';
+      document.getElementById('conteudo-escopo').innerHTML = htmlEscopo;
+
+      /* ---- Painel 4: Planilha de Serviços ---- */
+      var servicos = Array.isArray(tecnico.lista_servicos) ? tecnico.lista_servicos : [];
+      var htmlServicos =
+        '<div style="overflow-x:auto;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr>' +
+            '<th>Código</th><th>Descrição</th><th>Un.</th>' +
+            '<th>Qtd</th><th>P.U.</th><th>Total</th>' +
+          '</tr></thead><tbody>';
+
+      servicos.forEach(function(s) {
+        htmlServicos += trTabela([s.codigo, s.descricao, s.unidade, s.quantidade, s.preco_unitario, s.total]);
+      });
+
+      if (servicos.length === 0) {
+        htmlServicos += '<tr><td colspan="6" style="text-align:center;color:#aaa;">Nenhum serviço encontrado.</td></tr>';
+      }
+
+      htmlServicos += '</tbody></table></div>';
+      document.getElementById('conteudo-servicos').innerHTML = htmlServicos;
+
+      /* ---- Painel 5: Cronograma Físico ---- */
+      var cronFis = Array.isArray(tecnico.cronograma_fisico) ? tecnico.cronograma_fisico : [];
+      var htmlCronFis =
+        '<div style="overflow-x:auto;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr><th>Mês</th><th>Atividades</th><th>% Execução</th></tr></thead><tbody>';
+
+      cronFis.forEach(function(c) {
+        htmlCronFis += trTabela([c.mes, c.atividades, c.percentual]);
+      });
+
+      if (cronFis.length === 0) {
+        htmlCronFis += '<tr><td colspan="3" style="text-align:center;color:#aaa;">Nenhum cronograma encontrado.</td></tr>';
+      }
+
+      htmlCronFis += '</tbody></table></div>';
+      document.getElementById('conteudo-cron-fis').innerHTML = htmlCronFis;
+
+      /* ---- Painel 6: Cronograma Financeiro / Planilha Orçamentária ---- */
+      var planilha = Array.isArray(financeiro.planilha_orcamentaria) ? financeiro.planilha_orcamentaria : [];
+      var htmlCronFin =
+        '<div style="overflow-x:auto;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr>' +
+            '<th>Item</th><th>Descrição</th><th>Un.</th>' +
+            '<th>Qtd</th><th>P.U.</th><th>Total</th>' +
+          '</tr></thead><tbody>';
+
+      planilha.forEach(function(p) {
+        htmlCronFin += trTabela([p.item, p.descricao, p.unidade, p.quantidade, p.preco_unitario, p.total]);
+      });
+
+      if (planilha.length === 0) {
+        htmlCronFin += '<tr><td colspan="6" style="text-align:center;color:#aaa;">Nenhum dado encontrado.</td></tr>';
+      }
+
+      htmlCronFin += '</tbody></table></div>';
+      document.getElementById('conteudo-cron-fin').innerHTML = htmlCronFin;
+
+      /* ---- Painel 7: Execução Operacional — Composições de Preço ---- */
+      document.getElementById('conteudo-execucao').innerHTML =
+        '<div class="card-titulo">Composições de Preço</div>' +
+        '<p style="font-size:14px;line-height:1.7;">' +
+          (tecnico.composicoes_preco || '—') +
+        '</p>';
+
+      /* ---- Painéis 8, 9, 10: Histogramas — aguardam dados futuros ---- */
+      var msgHistograma = '<p style="font-size:14px;color:#888;">Dados extraídos das composições de preço. Detalhamento disponível em próxima versão.</p>';
+      document.getElementById('conteudo-hist-mo').innerHTML    = msgHistograma;
+      document.getElementById('conteudo-hist-equip').innerHTML = msgHistograma;
+      document.getElementById('conteudo-hist-mat').innerHTML   = msgHistograma;
+
+      /* ---- Painel 11: Fluxo de Caixa — BDI ---- */
+      var bdi        = (financeiro.composicao_bdi) || {};
+      var componentes = Array.isArray(bdi.componentes) ? bdi.componentes : [];
+      var htmlFluxo =
+        '<div class="card-titulo">Composição do BDI — Total: ' + (bdi.total_percentual || '—') + '</div>' +
+        '<div style="overflow-x:auto;margin-top:12px;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr><th>Componente</th><th>Percentual</th></tr></thead><tbody>';
+
+      componentes.forEach(function(c) {
+        htmlFluxo += trTabela([c.nome, c.percentual]);
+      });
+
+      if (componentes.length === 0) {
+        htmlFluxo += '<tr><td colspan="2" style="text-align:center;color:#aaa;">Nenhum componente encontrado.</td></tr>';
+      }
+
+      htmlFluxo += '</tbody></table></div>';
+      document.getElementById('conteudo-fluxo').innerHTML = htmlFluxo;
+
+      /* ---- Painel 12: Matriz de Riscos — Curva ABC ---- */
+      var curva     = (financeiro.curva_abc) || {};
+      var srvAbc    = Array.isArray(curva.servicos) ? curva.servicos : [];
+      var insuAbc   = Array.isArray(curva.insumos)  ? curva.insumos  : [];
+
+      var htmlRiscos =
+        '<div class="card-titulo">Curva ABC — Serviços</div>' +
+        '<div style="overflow-x:auto;margin-bottom:24px;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr><th>Classe</th><th>Descrição</th><th>Valor</th><th>% Acumulado</th></tr></thead><tbody>';
+
+      srvAbc.forEach(function(s) {
+        var badge = '<span class="badge-' + (s.classificacao || 'c').toLowerCase() + '">' + (s.classificacao || '?') + '</span>';
+        htmlRiscos += '<tr><td>' + badge + '</td><td>' + (s.descricao || '—') + '</td><td>' + (s.valor || '—') + '</td><td>' + (s.percentual_acumulado || '—') + '</td></tr>';
+      });
+
+      if (srvAbc.length === 0) {
+        htmlRiscos += '<tr><td colspan="4" style="text-align:center;color:#aaa;">Nenhum dado encontrado.</td></tr>';
+      }
+
+      htmlRiscos +=
+        '</tbody></table></div>' +
+        '<div class="card-titulo">Curva ABC — Insumos</div>' +
+        '<div style="overflow-x:auto;">' +
+        '<table class="tabela-dados">' +
+          '<thead><tr><th>Classe</th><th>Descrição</th><th>Valor</th><th>% Acumulado</th></tr></thead><tbody>';
+
+      insuAbc.forEach(function(i) {
+        var badge = '<span class="badge-' + (i.classificacao || 'c').toLowerCase() + '">' + (i.classificacao || '?') + '</span>';
+        htmlRiscos += '<tr><td>' + badge + '</td><td>' + (i.descricao || '—') + '</td><td>' + (i.valor || '—') + '</td><td>' + (i.percentual_acumulado || '—') + '</td></tr>';
+      });
+
+      if (insuAbc.length === 0) {
+        htmlRiscos += '<tr><td colspan="4" style="text-align:center;color:#aaa;">Nenhum dado encontrado.</td></tr>';
+      }
+
+      htmlRiscos += '</tbody></table></div>';
+      document.getElementById('conteudo-riscos').innerHTML = htmlRiscos;
+
+      /* ---- Painel 13: Parecer e Simulador ---- */
+      document.getElementById('conteudo-parecer').innerHTML =
+        '<div class="card-titulo">Parecer Técnico</div>' +
+        '<div class="grid-kv" style="margin-top:12px;">' +
+          '<div class="campo-kv"><div class="chave">Objeto</div><div class="valor">' + (edital.objeto || '—') + '</div></div>' +
+          '<div class="campo-kv"><div class="chave">Valor Estimado</div><div class="valor">' + (edital.valor_estimado || '—') + '</div></div>' +
+          '<div class="campo-kv"><div class="chave">BDI</div><div class="valor">' + ((bdi && bdi.total_percentual) || '—') + '</div></div>' +
+          '<div class="campo-kv"><div class="chave">Encargos Sociais</div><div class="valor">' + (tecnico.encargos_sociais || '—') + '</div></div>' +
+        '</div>';
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Envia o formulário para POST /analisar                             */
+    /* ---------------------------------------------------------------- */
+    function enviarAnalise() {
+      ocultarErro();
+
+      var inputEdital = document.getElementById('input-edital');
+
+      if (!inputEdital.files || inputEdital.files.length === 0) {
+        mostrarErro('O arquivo do edital é obrigatório. Selecione um PDF antes de continuar.');
+        return;
+      }
+
+      var formData = new FormData();
+
+      /* Campo: edital (1 arquivo) */
+      formData.append('edital', inputEdital.files[0]);
+
+      /* Campo: tecnicos (múltiplos) */
+      var inputTecnicos = document.getElementById('input-tecnicos');
+      Array.from(inputTecnicos.files).forEach(function(f) {
+        formData.append('tecnicos', f);
+      });
+
+      /* Campo: financeiros (múltiplos) */
+      var inputFinanceiros = document.getElementById('input-financeiros');
+      Array.from(inputFinanceiros.files).forEach(function(f) {
+        formData.append('financeiros', f);
+      });
+
+      setLoading(true);
+
+      fetch('/analisar', {
+        method: 'POST',
+        body: formData
+      })
+        .then(function(response) {
+          if (!response.ok) {
+            return response.json().then(function(err) {
+              throw new Error(err.detalhe || err.erro || 'Erro desconhecido na API.');
+            });
+          }
+          return response.json();
+        })
+        .then(function(dados) {
+          setLoading(false);
+          popularPaineis(dados);
+          habilitarAbas();
+
+          /* Navega automaticamente para o Resumo Executivo */
+          var btnResumo = document.getElementById('btn-resumo');
+          mostrarPainel('resumo', btnResumo);
+        })
+        .catch(function(err) {
+          setLoading(false);
+          mostrarErro('Erro ao analisar os documentos: ' + err.message);
+        });
+    }
   </script>
 
 </body>
