@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSF App</title>
+  <style>
+    /* ---------------------------------------------------------------- */
+    /* Reset e variáveis                                                  */
+    /* ---------------------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --azul:       #1A2D5A;
+      --azul-claro: #243d78;
+      --laranja:    #E8621A;
+      --laranja-hover: #cf5516;
+      --fundo:      #f4f6f9;
+      --branco:     #ffffff;
+      --texto:      #333333;
+      --borda:      #dde1e9;
+      --sombra:     0 2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--fundo);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Cabeçalho                                                          */
+    /* ---------------------------------------------------------------- */
+    header {
+      background-color: var(--azul);
+      color: var(--branco);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      box-shadow: var(--sombra);
+    }
+
+    header .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    header .logo span {
+      color: var(--laranja);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Barra de abas                                                      */
+    /* ---------------------------------------------------------------- */
+    nav.abas {
+      background-color: var(--azul-claro);
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav.abas::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav.abas button {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.75);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 14px 20px;
+      white-space: nowrap;
+      transition: background-color 0.2s, color 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+
+    nav.abas button:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--branco);
+    }
+
+    nav.abas button.ativa {
+      color: var(--branco);
+      border-bottom: 3px solid var(--laranja);
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Conteúdo principal                                                 */
+    /* ---------------------------------------------------------------- */
+    main {
+      padding: 32px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .painel {
+      display: none;
+    }
+
+    .painel.ativo {
+      display: block;
+    }
+
+    .painel h2 {
+      color: var(--azul);
+      font-size: 20px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--borda);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Card genérico                                                      */
+    /* ---------------------------------------------------------------- */
+    .card {
+      background-color: var(--branco);
+      border-radius: 8px;
+      box-shadow: var(--sombra);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Tela de upload                                                     */
+    /* ---------------------------------------------------------------- */
+    .upload-area {
+      border: 2px dashed var(--borda);
+      border-radius: 8px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--laranja);
+      background-color: rgba(232, 98, 26, 0.04);
+    }
+
+    .upload-area .icone {
+      font-size: 48px;
+      margin-bottom: 12px;
+      color: var(--azul);
+    }
+
+    .upload-area p {
+      color: #666;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .upload-area input[type="file"] {
+      display: none;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Botão primário                                                     */
+    /* ---------------------------------------------------------------- */
+    .btn-primario {
+      background-color: var(--laranja);
+      border: none;
+      border-radius: 6px;
+      color: var(--branco);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 24px;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primario:hover {
+      background-color: var(--laranja-hover);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Placeholder de conteúdo                                            */
+    /* ---------------------------------------------------------------- */
+    .placeholder {
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Rodapé                                                             */
+    /* ---------------------------------------------------------------- */
+    footer {
+      background-color: var(--azul);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      padding: 16px 24px;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    <div class="logo">RSF<span>App</span></div>
+  </header>
+
+  <!-- Barra de navegação com 13 abas -->
+  <nav class="abas" id="nav-abas">
+    <button class="ativa" onclick="mostrarPainel('upload', this)">Upload</button>
+    <button onclick="mostrarPainel('dashboard', this)">Dashboard</button>
+    <button onclick="mostrarPainel('clientes', this)">Clientes</button>
+    <button onclick="mostrarPainel('processos', this)">Processos</button>
+    <button onclick="mostrarPainel('documentos', this)">Documentos</button>
+    <button onclick="mostrarPainel('financeiro', this)">Financeiro</button>
+    <button onclick="mostrarPainel('agenda', this)">Agenda</button>
+    <button onclick="mostrarPainel('relatorios', this)">Relatórios</button>
+    <button onclick="mostrarPainel('analise', this)">Análise IA</button>
+    <button onclick="mostrarPainel('comunicacao', this)">Comunicação</button>
+    <button onclick="mostrarPainel('equipe', this)">Equipe</button>
+    <button onclick="mostrarPainel('configuracoes', this)">Configurações</button>
+    <button onclick="mostrarPainel('ajuda', this)">Ajuda</button>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main>
+
+    <!-- Aba: Upload -->
+    <section id="painel-upload" class="painel ativo">
+      <h2>Upload de Documentos</h2>
+      <div class="card">
+        <div
+          class="upload-area"
+          id="upload-area"
+          onclick="document.getElementById('input-arquivo').click()"
+        >
+          <div class="icone">&#128196;</div>
+          <strong>Clique para selecionar um arquivo</strong>
+          <p>ou arraste e solte aqui</p>
+          <p>Formatos aceitos: PDF, DOCX, XLSX, CSV, TXT</p>
+          <input
+            type="file"
+            id="input-arquivo"
+            accept=".pdf,.docx,.xlsx,.csv,.txt"
+          />
+        </div>
+        <div style="margin-top: 16px; text-align: right;">
+          <button class="btn-primario">Enviar Arquivo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Aba: Dashboard -->
+    <section id="painel-dashboard" class="painel">
+      <h2>Dashboard</h2>
+      <div class="card">
+        <p class="placeholder">Conteúdo do dashboard em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Clientes -->
+    <section id="painel-clientes" class="painel">
+      <h2>Clientes</h2>
+      <div class="card">
+        <p class="placeholder">Gestão de clientes em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Processos -->
+    <section id="painel-processos" class="painel">
+      <h2>Processos</h2>
+      <div class="card">
+        <p class="placeholder">Gestão de processos em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Documentos -->
+    <section id="painel-documentos" class="painel">
+      <h2>Documentos</h2>
+      <div class="card">
+        <p class="placeholder">Gestão de documentos em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Financeiro -->
+    <section id="painel-financeiro" class="painel">
+      <h2>Financeiro</h2>
+      <div class="card">
+        <p class="placeholder">Módulo financeiro em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Agenda -->
+    <section id="painel-agenda" class="painel">
+      <h2>Agenda</h2>
+      <div class="card">
+        <p class="placeholder">Agenda em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Relatórios -->
+    <section id="painel-relatorios" class="painel">
+      <h2>Relatórios</h2>
+      <div class="card">
+        <p class="placeholder">Módulo de relatórios em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Análise IA -->
+    <section id="painel-analise" class="painel">
+      <h2>Análise com Inteligência Artificial</h2>
+      <div class="card">
+        <p class="placeholder">Módulo de análise por IA em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Comunicação -->
+    <section id="painel-comunicacao" class="painel">
+      <h2>Comunicação</h2>
+      <div class="card">
+        <p class="placeholder">Módulo de comunicação em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Equipe -->
+    <section id="painel-equipe" class="painel">
+      <h2>Equipe</h2>
+      <div class="card">
+        <p class="placeholder">Gestão de equipe em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Configurações -->
+    <section id="painel-configuracoes" class="painel">
+      <h2>Configurações</h2>
+      <div class="card">
+        <p class="placeholder">Configurações do sistema em desenvolvimento.</p>
+      </div>
+    </section>
+
+    <!-- Aba: Ajuda -->
+    <section id="painel-ajuda" class="painel">
+      <h2>Ajuda</h2>
+      <div class="card">
+        <p class="placeholder">Central de ajuda em desenvolvimento.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    &copy; 2026 RSF App — Todos os direitos reservados.
+  </footer>
+
+  <script>
+    /* ---------------------------------------------------------------- */
+    /* Navegação entre abas                                               */
+    /* ---------------------------------------------------------------- */
+    function mostrarPainel(id, botao) {
+      var paineis = document.querySelectorAll('.painel');
+      paineis.forEach(function(p) {
+        p.classList.remove('ativo');
+      });
+
+      var botoes = document.querySelectorAll('nav.abas button');
+      botoes.forEach(function(b) {
+        b.classList.remove('ativa');
+      });
+
+      document.getElementById('painel-' + id).classList.add('ativo');
+      botao.classList.add('ativa');
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Drag and drop na área de upload                                    */
+    /* ---------------------------------------------------------------- */
+    var uploadArea = document.getElementById('upload-area');
+
+    uploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#E8621A';
+      uploadArea.style.backgroundColor = 'rgba(232, 98, 26, 0.06)';
+    });
+
+    uploadArea.addEventListener('dragleave', function() {
+      uploadArea.style.borderColor = '';
+      uploadArea.style.backgroundColor = '';
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadArea.style.borderColor = '';
+      uploadArea.style.backgroundColor = '';
+      var arquivos = e.dataTransfer.files;
+      if (arquivos.length > 0) {
+        document.getElementById('input-arquivo').files = arquivos;
+      }
+    });
+  </script>
+
+</body>
+</html>
