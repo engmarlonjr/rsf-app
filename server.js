@@ -101,9 +101,7 @@ async function analisarEdital(arquivoBuffer) {
   var mensagem = await anthropic.messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
-    headers: {
-      'anthropic-beta': 'pdfs-2024-09-25'
-    },
+    betas: ['pdfs-2024-09-25'],
     messages: [
       {
         role: 'user',
@@ -178,9 +176,7 @@ async function analisarTecnico(arquivosBuffer) {
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 4096,
-    headers: {
-      'anthropic-beta': 'pdfs-2024-09-25'
-    },
+    betas: ['pdfs-2024-09-25'],
     messages: [
       {
         role: 'user',
@@ -250,9 +246,7 @@ async function analisarFinanceiro(arquivosBuffer) {
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 3000,
-    headers: {
-      'anthropic-beta': 'pdfs-2024-09-25'
-    },
+    betas: ['pdfs-2024-09-25'],
     messages: [
       {
         role: 'user',
