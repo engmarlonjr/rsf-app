@@ -116,10 +116,22 @@ function bufferParaDocumento(buffer) {
 /* Chamada 1 — Edital (Haiku, 1024 tokens)                             */
 /* ------------------------------------------------------------------ */
 async function analisarEdital(arquivoBuffer) {
+  var schema = JSON.stringify({
+    objeto:               'descrição em até 150 chars',
+    contratante:          'nome do órgão',
+    modalidade:           'ex: Pregão Eletrônico',
+    valor_estimado:       0.00,
+    prazo_execucao:       'ex: 12 meses',
+    fonte_recursos:       'ex: Tesouro Municipal',
+    prazo_pagamento:      'ex: 30 dias após medição',
+    regime_execucao:      'ex: Empreitada por Preço Global',
+    garantia_contratual:  'ex: 5% do valor',
+    habilitacao_tecnica:  'resumo em até 150 chars'
+  }, null, 2);
+
   var mensagem = await anthropic.messages.create({
     model: 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
-
     messages: [
       {
         role: 'user',
@@ -127,23 +139,7 @@ async function analisarEdital(arquivoBuffer) {
           bufferParaDocumento(arquivoBuffer),
           {
             type: 'text',
-            text: [
-              'Analise o edital em anexo e extraia as informações a seguir.',
-              'Retorne SOMENTE um JSON válido, sem markdown, sem texto adicional.',
-              'Estrutura obrigatória:',
-              '{',
-              '  "objeto": "descrição do objeto",',
-              '  "contratante": "nome do órgão contratante",',
-              '  "modalidade": "modalidade da licitação",',
-              '  "prazo": "prazo de execução",',
-              '  "valor_estimado": "valor estimado da contratação",',
-              '  "fonte_recursos": "fonte de recursos",',
-              '  "condicoes_pagamento": "condições de pagamento",',
-              '  "prazo_recebimento": "prazo para recebimento das propostas",',
-              '  "penalidades": "penalidades previstas",',
-              '  "habilitacao_exigida": "documentos de habilitação exigidos"',
-              '}'
-            ].join('\n')
+            text: 'Analise o edital e retorne APENAS este JSON, sem texto adicional:\n' + schema
           }
         ]
       }
@@ -158,43 +154,30 @@ async function analisarEdital(arquivoBuffer) {
 /* Chamada 2 — Técnico (Sonnet, 4096 tokens)                           */
 /* ------------------------------------------------------------------ */
 async function analisarTecnico(arquivosBuffer) {
-  var conteudo = arquivosBuffer.map(bufferParaDocumento);
+  var schema = JSON.stringify({
+    escopo:         'descrição em até 300 chars',
+    localizacao:    'endereço ou cidade/UF',
+    tipo_construcao: 'ex: Construção de salas de aula',
+    servicos: [
+      { codigo: '...', descricao: '...', unidade: '...', quantidade: 0, preco_unitario: 0.00, total: 0.00 }
+    ],
+    cronograma: [
+      { mes: 1, percentual_fisico: 0.0, percentual_financeiro: 0.0 }
+    ],
+    encargos_sociais: { total_percentual: 0.0, composicao: 'resumo em até 150 chars' }
+  }, null, 2);
 
-  conteudo.push({
-    type: 'text',
-    text: [
-      'Analise os documentos técnicos em anexo e extraia as informações a seguir.',
-      'Retorne SOMENTE um JSON válido, sem markdown, sem texto adicional.',
-      'Estrutura obrigatória:',
-      '{',
-      '  "escopo_detalhado": "descrição completa do escopo de serviços",',
-      '  "lista_servicos": [',
-      '    {',
-      '      "codigo": "código do serviço",',
-      '      "descricao": "descrição do serviço",',
-      '      "unidade": "unidade de medida",',
-      '      "quantidade": "quantidade",',
-      '      "preco_unitario": "preço unitário",',
-      '      "total": "valor total"',
-      '    }',
-      '  ],',
-      '  "cronograma_fisico": [',
-      '    {',
-      '      "mes": "número do mês",',
-      '      "atividades": "atividades previstas para o mês",',
-      '      "percentual": "percentual de execução"',
-      '    }',
-      '  ],',
-      '  "composicoes_preco": "descrição das composições de preço encontradas",',
-      '  "encargos_sociais": "percentual e composição dos encargos sociais"',
-      '}'
-    ].join('\n')
-  });
+  var instrucao =
+    'Analise os documentos técnicos e retorne APENAS este JSON:\n' + schema + '\n' +
+    'Regras: inclua no máximo os 20 serviços de maior valor total. ' +
+    'Inclua apenas os meses reais do cronograma. Sem texto fora do JSON.';
+
+  var conteudo = arquivosBuffer.map(bufferParaDocumento);
+  conteudo.push({ type: 'text', text: instrucao });
 
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 8192,
-
+    max_tokens: 4096,
     messages: [
       {
         role: 'user',
@@ -208,63 +191,35 @@ async function analisarTecnico(arquivosBuffer) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Chamada 3 — Financeiro (Sonnet, 3000 tokens)                        */
+/* Chamada 3 — Financeiro (Sonnet, 4096 tokens)                        */
 /* ------------------------------------------------------------------ */
 async function analisarFinanceiro(arquivosBuffer) {
-  var conteudo = arquivosBuffer.map(bufferParaDocumento);
+  var schema = JSON.stringify({
+    valor_total:  0.00,
+    custo_direto: 0.00,
+    bdi: {
+      percentual_total:        0.0,
+      administracao_central:   0.0,
+      seguro_garantia:         0.0,
+      despesas_financeiras:    0.0,
+      lucro:                   0.0,
+      tributos:                0.0
+    },
+    curva_abc: [
+      { posicao: 1, descricao: '...', valor: 0.00, percentual: 0.0, percentual_acumulado: 0.0 }
+    ]
+  }, null, 2);
 
-  conteudo.push({
-    type: 'text',
-    text: [
-      'Analise os documentos financeiros em anexo e extraia as informações a seguir.',
-      'Retorne SOMENTE um JSON válido, sem markdown, sem texto adicional.',
-      'Estrutura obrigatória:',
-      '{',
-      '  "planilha_orcamentaria": [',
-      '    {',
-      '      "item": "número do item",',
-      '      "descricao": "descrição do item",',
-      '      "unidade": "unidade de medida",',
-      '      "quantidade": "quantidade",',
-      '      "preco_unitario": "preço unitário",',
-      '      "total": "valor total"',
-      '    }',
-      '  ],',
-      '  "composicao_bdi": {',
-      '    "total_percentual": "percentual total do BDI",',
-      '    "componentes": [',
-      '      {',
-      '        "nome": "nome do componente",',
-      '        "percentual": "percentual do componente"',
-      '      }',
-      '    ]',
-      '  },',
-      '  "curva_abc": {',
-      '    "servicos": [',
-      '      {',
-      '        "classificacao": "A, B ou C",',
-      '        "descricao": "descrição do serviço",',
-      '        "valor": "valor",',
-      '        "percentual_acumulado": "percentual acumulado"',
-      '      }',
-      '    ],',
-      '    "insumos": [',
-      '      {',
-      '        "classificacao": "A, B ou C",',
-      '        "descricao": "descrição do insumo",',
-      '        "valor": "valor",',
-      '        "percentual_acumulado": "percentual acumulado"',
-      '      }',
-      '    ]',
-      '  }',
-      '}'
-    ].join('\n')
-  });
+  var instrucao =
+    'Analise os documentos financeiros e retorne APENAS este JSON:\n' + schema + '\n' +
+    'Regras: curva_abc deve conter no máximo 20 itens de maior valor. Sem texto fora do JSON.';
+
+  var conteudo = arquivosBuffer.map(bufferParaDocumento);
+  conteudo.push({ type: 'text', text: instrucao });
 
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 6000,
-
+    max_tokens: 4096,
     messages: [
       {
         role: 'user',
