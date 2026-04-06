@@ -76,11 +76,26 @@ const anthropic = new Anthropic({
 /* Helper — remove blocos markdown antes do JSON.parse                 */
 /* ------------------------------------------------------------------ */
 function limparMarkdown(texto) {
-  return texto
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/```\s*$/i, '')
-    .trim();
+  var limpo = texto.trim();
+  limpo = limpo.replace(/^```json\s*/i, '');
+  limpo = limpo.replace(/^```\s*/i, '');
+  limpo = limpo.replace(/```\s*$/i, '');
+  return limpo.trim();
+}
+
+/* ------------------------------------------------------------------ */
+/* Helper — fecha arrays e objetos abertos em JSON truncado            */
+/* ------------------------------------------------------------------ */
+function repararJson(texto) {
+  var t = texto;
+  var abre     = (t.match(/\{/g) || []).length;
+  var fecha    = (t.match(/\}/g) || []).length;
+  var abreArr  = (t.match(/\[/g) || []).length;
+  var fechaArr = (t.match(/\]/g) || []).length;
+  var i;
+  for (i = 0; i < abreArr - fechaArr; i++) { t += ']'; }
+  for (i = 0; i < abre - fecha;     i++) { t += '}'; }
+  return t;
 }
 
 /* ------------------------------------------------------------------ */
@@ -136,7 +151,7 @@ async function analisarEdital(arquivoBuffer) {
   });
 
   var textoResposta = mensagem.content[0].text;
-  return JSON.parse(limparMarkdown(textoResposta));
+  return JSON.parse(repararJson(limparMarkdown(textoResposta)));
 }
 
 /* ------------------------------------------------------------------ */
@@ -178,7 +193,7 @@ async function analisarTecnico(arquivosBuffer) {
 
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
+    max_tokens: 8192,
 
     messages: [
       {
@@ -189,7 +204,7 @@ async function analisarTecnico(arquivosBuffer) {
   });
 
   var textoResposta = mensagem.content[0].text;
-  return JSON.parse(limparMarkdown(textoResposta));
+  return JSON.parse(repararJson(limparMarkdown(textoResposta)));
 }
 
 /* ------------------------------------------------------------------ */
@@ -248,7 +263,7 @@ async function analisarFinanceiro(arquivosBuffer) {
 
   var mensagem = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 3000,
+    max_tokens: 6000,
 
     messages: [
       {
@@ -259,7 +274,7 @@ async function analisarFinanceiro(arquivosBuffer) {
   });
 
   var textoResposta = mensagem.content[0].text;
-  return JSON.parse(limparMarkdown(textoResposta));
+  return JSON.parse(repararJson(limparMarkdown(textoResposta)));
 }
 
 /* ------------------------------------------------------------------ */
